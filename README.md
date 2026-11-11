@@ -59,6 +59,18 @@ npm run dev
 
 Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
+### 5. Build & Deploy Produksi (PM2)
+```bash
+# Build produksi
+npm run build
+
+# Jalankan service via PM2
+pm2 start ecosystem.config.js
+pm2 save
+```
+
+Aplikasi berjalan pada port **3020** (atau disesuaikan di `ecosystem.config.js` / `.env.local`).
+
 ---
 
 ## 📁 Struktur Direktori

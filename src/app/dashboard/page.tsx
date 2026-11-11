@@ -5,8 +5,9 @@ import Navbar from "@/components/Navbar";
 import BannerAlerts from "@/components/BannerAlerts";
 import AppCard from "@/components/AppCard";
 import SearchModal from "@/components/SearchModal";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { Application, UserProfile, BillingStatus } from "@/lib/types";
+import { DEFAULT_APPLICATIONS, DEFAULT_USER, DEFAULT_BILLING } from "@/lib/defaultData";
 import { Pin, Grid, Layers, Sparkles } from "lucide-react";
 
 export default function DashboardPage() {
@@ -22,14 +23,27 @@ export default function DashboardPage() {
     async function loadData() {
       setLoading(true);
       try {
+        if (!isSupabaseConfigured) {
+          setApplications(DEFAULT_APPLICATIONS);
+          setUser(DEFAULT_USER);
+          setBilling(DEFAULT_BILLING);
+          const local = localStorage.getItem("pinnedDashboardApps");
+          if (local) setPinnedIds(JSON.parse(local));
+          else setPinnedIds(["sirenbis", "sip2rbb", "sip-takol", "simr"]);
+          setLoading(false);
+          return;
+        }
+
         // 1. Fetch applications from Supabase
         const { data: appsData } = await supabase
           .from("applications")
           .select("*")
           .order("display_order", { ascending: true });
 
-        if (appsData) {
+        if (appsData && appsData.length > 0) {
           setApplications(appsData);
+        } else {
+          setApplications(DEFAULT_APPLICATIONS);
         }
 
         // 2. Fetch User & Organization info
@@ -55,6 +69,8 @@ export default function DashboardPage() {
             role: userData.roles as any,
             bpr: userData.bpr_organizations as any,
           });
+        } else {
+          setUser(DEFAULT_USER);
         }
 
         // 3. Fetch Preferences
@@ -78,8 +94,12 @@ export default function DashboardPage() {
           user_prefix: "BPR-BATANG",
         });
         if (billData) setBilling(billData as BillingStatus);
+        else setBilling(DEFAULT_BILLING);
       } catch (err) {
         console.error("Error loading dashboard data:", err);
+        setApplications(DEFAULT_APPLICATIONS);
+        setUser(DEFAULT_USER);
+        setBilling(DEFAULT_BILLING);
       } finally {
         setLoading(false);
       }
@@ -98,8 +118,8 @@ export default function DashboardPage() {
     setPinnedIds(nextPinned);
     localStorage.setItem("pinnedDashboardApps", JSON.stringify(nextPinned));
 
-    // Persist to Supabase if user exists
-    if (user?.id) {
+    // Persist to Supabase if configured & user exists
+    if (isSupabaseConfigured && user?.id && user.id !== "usr-default-bpr") {
       await supabase
         .from("user_dashboard_preferences")
         .upsert({ user_id: user.id, pinned_apps: nextPinned });
