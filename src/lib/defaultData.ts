@@ -6,7 +6,7 @@ export const DEFAULT_APPLICATIONS: Application[] = [
     title: "SIRENBIS",
     subtitle: "Sistem Informasi Rencana Bisnis BPR (Penyusunan & Proyeksi)",
     version_label: "Versi 4 (Terbaru)",
-    route_path: "/app/sirenbis",
+    route_path: "/rencana-bisnis-baru/sirenbis4",
     category: "Rencana Bisnis",
     icon_bg_color: "bg-blue-50",
     icon_text_color: "text-blue-600",

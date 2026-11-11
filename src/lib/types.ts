@@ -41,3 +41,43 @@ export interface BillingStatus {
   nearest_due_date: string | null;
   is_blocked: boolean;
 }
+
+export type RbbJenis = 'RUTIN' | 'KOREKSI';
+export type RbbStatus = 'DRAFT' | 'SUBMITTED' | 'LOCKED' | 'APPROVED';
+
+export interface RbbSelfAssessment {
+  id: string;
+  bpr_id: string;
+  tahun_rencana: number;
+  jenis_rbb: RbbJenis;
+  status_dokumen: RbbStatus;
+  nama_skenario?: string;
+  sandi_bpr?: string;
+  kota_kab?: string;
+  modal_inti?: number;
+  seojk_reference?: string;
+  progress_total?: number;
+  progress_persiapan?: "Lengkap" | "Belum Lengkap" | "Perlu Perhatian";
+  progress_proyeksi?: "Lengkap" | "Belum Lengkap" | "Perlu Perhatian";
+  progress_narasi?: "Lengkap" | "Belum Lengkap" | "Perlu Perhatian";
+  locked_at: string | null;
+  locked_by: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  bpr_name?: string;
+}
+
+export interface RbbTrendProjection {
+  id: string;
+  assessment_id: string;
+  kategori: 'NERACA' | 'LABA_RUGI' | 'RASIO';
+  pos_rekening: string;
+  realisasi_thn_lalu: number;
+  proyeksi_thn_1: number;
+  proyeksi_thn_2: number;
+  proyeksi_thn_3: number;
+  catatan_asumsi: string | null;
+  created_at?: string;
+}
+

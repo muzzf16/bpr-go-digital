@@ -15,3 +15,37 @@ body {
   font-family: 'Source Sans 3', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
+
+@keyframes rbbHighlightBlink {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(var(--rbb-blink-rgb), 0);
+  }
+  50% {
+    background-color: rgba(var(--rbb-blink-rgb), 0.12);
+    box-shadow: 0 0 0 4px rgba(var(--rbb-blink-rgb), 0.9);
+  }
+}
+
+.rbb-highlight-blink {
+  --rbb-blink-rgb: 107, 114, 128;
+  animation: rbbHighlightBlink 0.5s ease-in-out 3;
+}
+
+.rbb-blink-rutin {
+  --rbb-blink-rgb: 5, 150, 105;
+}
+
+.rbb-blink-koreksi {
+  --rbb-blink-rgb: 249, 115, 22;
+}
+
+@media print {
+  body :where(:not(.sirenbis4-trend-print-area):not(.sirenbis4-trend-print-area *)) {
+    display: none !important;
+  }
+  .sirenbis4-trend-print-area {
+    display: block !important;
+    width: 100% !important;
+  }
+}
+
